@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%"
   },
-  title: { fontSize: 18, marginVertical: 4 },
-  price: { fontSize: 14, color: "#888" },
+  title: { fontSize: 18, marginVertical: 2, fontFamily: "open-sans-bold" },
+  price: { fontSize: 14, color: "#888", fontFamily: "open-sans" },
   actions: {
     flexDirection: "row",
     justifyContent: "space-between",
