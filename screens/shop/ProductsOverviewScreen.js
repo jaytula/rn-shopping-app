@@ -30,6 +30,7 @@ const ProductsOverviewScreen = props => {
               }
             });
           }}
+          showButtons
           onAddToCart={() => {
             dispatch(cartActions.addToCart(itemData.item));
           }}
