@@ -51,7 +51,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         items: updatedItems,
-        totalAmount: state.totalAmount - product.productPrice
+        totalAmount:
+          Math.round((state.totalAmount - product.productPrice) * 100) / 100
       };
 
     case ADD_ORDER:
@@ -61,7 +62,8 @@ export default (state = initialState, action) => {
       const selectedItem = state.items[action.productId];
       if (!selectedItem) return state;
       const updatedItems2 = { ...state.items };
-      const newTotalAmount = state.totalAmount - selectedItem.sum;
+      const newTotalAmount =
+        Math.round((state.totalAmount - selectedItem.sum) * 100) / 100;
       delete updatedItems2[action.productId];
       return { ...state, items: updatedItems2, totalAmount: newTotalAmount };
 

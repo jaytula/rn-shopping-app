@@ -1,5 +1,5 @@
 import PRODUCTS from "../../data/dummy-data";
-import { DELETE_PRODUCT } from "../actions/products";
+import { DELETE_PRODUCT, EDIT_PRODUCT } from "../actions/products";
 
 const initialState = {
   availableProducts: PRODUCTS,
@@ -18,6 +18,9 @@ export default (state = initialState, action) => {
           product => product.id !== action.productId
         )
       };
+
+    case EDIT_PRODUCT:
+
     default:
       return state;
   }

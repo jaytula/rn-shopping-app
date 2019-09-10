@@ -26,7 +26,16 @@ const UserProductsScreen = props => {
           price={itemData.item.price}
           onSelect={() => {}}
         >
-          <Button color={Colors.primary} title="Edit" onPress={() => {}} />
+          <Button
+            color={Colors.primary}
+            title="Edit"
+            onPress={() => {
+              props.navigation.navigate({
+                routeName: "EditProduct",
+                params: { productId: itemData.item.id }
+              });
+            }}
+          />
           <Button
             color={Colors.primary}
             title="Delete"
@@ -49,6 +58,15 @@ UserProductsScreen.navigationOptions = navData => {
           title="Menu"
           iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
           onPress={() => navData.navigation.toggleDrawer()}
+        ></Item>
+      </HeaderButtons>
+    ),
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-create" : "ios-create"}
+          onPress={() => navData.navigation.navigate("EditProduct")}
         ></Item>
       </HeaderButtons>
     )
