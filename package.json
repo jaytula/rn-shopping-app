@@ -5,7 +5,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
   },
   "dependencies": {
     "expo": "^34.0.1",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "babel-preset-expo": "^6.0.0",
+    "jest": "^24.9.0",
     "redux-devtools-extension": "^2.13.8"
   },
   "private": true
