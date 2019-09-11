@@ -1,30 +1,33 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, StyleSheet, TextInput, ScrollView } from "react-native";
-
-import { useSelector, useDispatch } from "react-redux";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Platform
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useSelector, useDispatch } from "react-redux";
 
 import HeaderButton from "../../components/UI/HeaderButton";
-import { Platform } from "@unimodules/core";
-
 import * as productActions from "../../store/actions/products";
 
 const EditProductScreen = props => {
   const prodId = props.navigation.getParam("productId");
-
   const editedProduct = useSelector(state =>
     state.products.userProducts.find(product => (product.id = prodId))
   );
+  const dispatch = useDispatch();
+
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
-  const [description, setDescription] = useState(
-    editedProduct ? editedProduct.description : ""
-  );
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ""
   );
   const [price, setPrice] = useState("");
-
-  const dispatch = useDispatch();
+  const [description, setDescription] = useState(
+    editedProduct ? editedProduct.description : ""
+  );
 
   const submitHandler = useCallback(() => {
     if (editedProduct) {
@@ -54,15 +57,7 @@ const EditProductScreen = props => {
           />
         </View>
         <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={description}
-            onChangeText={text => setDescription(text)}
-          />
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>ImageUrl</Text>
+          <Text style={styles.label}>Image URL</Text>
           <TextInput
             style={styles.input}
             value={imageUrl}
@@ -79,6 +74,14 @@ const EditProductScreen = props => {
             />
           </View>
         )}
+        <View style={styles.formControl}>
+          <Text style={styles.label}>Description</Text>
+          <TextInput
+            style={styles.input}
+            value={description}
+            onChangeText={text => setDescription(text)}
+          />
+        </View>
       </View>
     </ScrollView>
   );

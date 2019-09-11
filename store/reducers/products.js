@@ -4,16 +4,14 @@ import {
   CREATE_PRODUCT,
   UPDATE_PRODUCT
 } from "../actions/products";
-
 import Product from "../../models/product";
 
 const initialState = {
   availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter(prod => (prod.ownerId = "u1"))
+  userProducts: PRODUCTS.filter(prod => prod.ownerId === "u1")
 };
 
 export default (state = initialState, action) => {
-  if (!action) return state;
   switch (action.type) {
     case CREATE_PRODUCT:
       const newProduct = new Product(
@@ -24,13 +22,11 @@ export default (state = initialState, action) => {
         action.productData.description,
         action.productData.price
       );
-
       return {
         ...state,
         availableProducts: state.availableProducts.concat(newProduct),
         userProducts: state.userProducts.concat(newProduct)
       };
-
     case UPDATE_PRODUCT:
       const productIndex = state.userProducts.findIndex(
         prod => prod.id === action.pid
@@ -45,31 +41,26 @@ export default (state = initialState, action) => {
       );
       const updatedUserProducts = [...state.userProducts];
       updatedUserProducts[productIndex] = updatedProduct;
-
       const availableProductIndex = state.availableProducts.findIndex(
         prod => prod.id === action.pid
       );
       const updatedAvailableProducts = [...state.availableProducts];
       updatedAvailableProducts[availableProductIndex] = updatedProduct;
-
       return {
         ...state,
         availableProducts: updatedAvailableProducts,
         userProducts: updatedUserProducts
       };
-
     case DELETE_PRODUCT:
       return {
         ...state,
-        availableProducts: state.availableProducts.filter(
-          product => product.id !== action.productId
-        ),
         userProducts: state.userProducts.filter(
-          product => product.id !== action.productId
+          product => product.id !== action.pid
+        ),
+        availableProducts: state.availableProducts.filter(
+          product => product.id !== action.pid
         )
       };
-
-    default:
-      return state;
   }
+  return state;
 };
