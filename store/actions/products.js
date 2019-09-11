@@ -4,7 +4,7 @@ export const CREATE_PRODUCT = "CREATE_PRODUCT";
 
 export const deleteProduct = id => ({
   type: DELETE_PRODUCT,
-  productId: id
+  pid: id
 });
 
 export const createProduct = (title, description, imageUrl, price) => {
