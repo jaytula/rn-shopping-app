@@ -16,7 +16,7 @@ import * as productsActions from "../../store/actions/products";
 const EditProductScreen = props => {
   const prodId = props.navigation.getParam("productId");
   const editedProduct = useSelector(state =>
-    state.products.userProducts.find(prod => (prod.id = prodId))
+    state.products.userProducts.find(prod => prod.id === prodId)
   );
   const dispatch = useDispatch();
 
