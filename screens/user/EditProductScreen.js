@@ -7,27 +7,36 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import { Platform } from "@unimodules/core";
 
+import * as productActions from "../../store/actions/products";
+
 const EditProductScreen = props => {
   const productId = props.navigation.getParam("productId");
 
-  console.log({ productId });
-  const currentProduct = useSelector(state =>
+  const editedProduct = useSelector(state =>
     state.products.userProducts.find(product => (product.id = productId))
   );
-  const [title, setTitle] = useState(
-    currentProduct ? currentProduct.title : ""
-  );
+  const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
   const [description, setDescription] = useState(
-    currentProduct ? currentProduct.description : ""
+    editedProduct ? editedProduct.description : ""
   );
   const [imageUrl, setImageUrl] = useState(
-    currentProduct ? currentProduct.imageUrl : ""
+    editedProduct ? editedProduct.imageUrl : ""
   );
   const [price, setPrice] = useState("");
 
+  const dispatch = useDispatch();
+
   const submitHandler = useCallback(() => {
-    console.log("submitting");
-  }, []);
+    if (editedProduct) {
+      dispatch(
+        productActions.updateProduct(productId, title, description, imageUrl)
+      );
+    } else {
+      dispatch(
+        productActions.createProduct(title, description, imageUrl, +price)
+      );
+    }
+  }, [productId, title, description, imageUrl, price, editedProduct, dispatch]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
@@ -53,14 +62,14 @@ const EditProductScreen = props => {
           />
         </View>
         <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>ImageUrl</Text>
           <TextInput
             style={styles.input}
             value={imageUrl}
             onChangeText={text => setImageUrl(text)}
           />
         </View>
-        {currentProduct ? null : (
+        {editedProduct ? null : (
           <View style={styles.formControl}>
             <Text style={styles.label}>Price</Text>
             <TextInput
