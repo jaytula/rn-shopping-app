@@ -13,16 +13,22 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
+  if (!action) return state;
   switch (action.type) {
-    case DELETE_PRODUCT:
+    case CREATE_PRODUCT:
+      const newProduct = new Product(
+        new Date().toString(),
+        "u1",
+        action.productData.title,
+        action.productData.imageUrl,
+        action.productData.description,
+        action.productData.price
+      );
+
       return {
         ...state,
-        availableProducts: state.availableProducts.filter(
-          product => product.id !== action.productId
-        ),
-        userProducts: state.userProducts.filter(
-          product => product.id !== action.productId
-        )
+        availableProducts: state.availableProducts.concat(newProduct),
+        userProducts: state.userProducts.concat(newProduct)
       };
 
     case UPDATE_PRODUCT:
@@ -52,21 +58,15 @@ export default (state = initialState, action) => {
         userProducts: updatedUserProducts
       };
 
-    case CREATE_PRODUCT:
-      const newProduct = new Product(
-        new Date().toString(),
-        "u1",
-        action.productData.title,
-        action.productData.imageUrl,
-        action.productData.description,
-        action.productData.price
-      );
-      //const hmmm0 = state.availableProducts.concat(newProduct);
-      //const hmmm1 = state.userProducts.concat(newProduct);
+    case DELETE_PRODUCT:
       return {
         ...state,
-        availableProducts: [...state.availableProducts, newProduct],
-        userProducts: [...state.userProducts, newProduct]
+        availableProducts: state.availableProducts.filter(
+          product => product.id !== action.productId
+        ),
+        userProducts: state.userProducts.filter(
+          product => product.id !== action.productId
+        )
       };
 
     default:

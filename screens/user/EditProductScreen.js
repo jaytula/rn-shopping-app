@@ -10,10 +10,10 @@ import { Platform } from "@unimodules/core";
 import * as productActions from "../../store/actions/products";
 
 const EditProductScreen = props => {
-  const productId = props.navigation.getParam("productId");
+  const prodId = props.navigation.getParam("productId");
 
   const editedProduct = useSelector(state =>
-    state.products.userProducts.find(product => (product.id = productId))
+    state.products.userProducts.find(product => (product.id = prodId))
   );
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
   const [description, setDescription] = useState(
@@ -29,14 +29,14 @@ const EditProductScreen = props => {
   const submitHandler = useCallback(() => {
     if (editedProduct) {
       dispatch(
-        productActions.updateProduct(productId, title, description, imageUrl)
+        productActions.updateProduct(prodId, title, description, imageUrl)
       );
     } else {
       dispatch(
         productActions.createProduct(title, description, imageUrl, +price)
       );
     }
-  }, [productId, title, description, imageUrl, price, editedProduct, dispatch]);
+  }, [dispatch, prodId, title, description, imageUrl, price]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
