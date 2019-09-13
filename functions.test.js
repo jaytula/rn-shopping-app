@@ -47,7 +47,6 @@ test("Store Check", () => {
   expect(state.products.availableProducts.length).toBe(7);
   expect(state.products.userProducts.length).toBe(7);
   expect(state.products.availableProducts[0]).toHaveProperty("id");
-  console.log(state.products.availableProducts);
 });
 
 test("productsReducer", () => {
