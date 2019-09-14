@@ -2,7 +2,7 @@ import React, { useReducer, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
 
 const INPUT_CHANGE = "INPUT_CHANGE";
-const INPUT_BLUR = "INPUT_BLUR";
+const INPUT_TOUCHED = "INPUT_BLUR";
 
 const inputReducer = (state, action) => {
   switch (action.type) {
@@ -12,7 +12,7 @@ const inputReducer = (state, action) => {
         value: action.value,
         isValid: action.isValid
       };
-    case INPUT_BLUR:
+    case INPUT_TOUCHED:
       return { ...state, touched: true };
     default:
       return state;
@@ -45,17 +45,19 @@ const Input = props => {
       isValid = false;
     }
     dispatch({ type: INPUT_CHANGE, value: text, isValid });
+    dispatch({ type: INPUT_TOUCHED });
   };
 
   const { onInputChange, id } = props;
 
   useEffect(() => {
-    if (inputState.touched)
+    if (inputState.touched) {
       onInputChange(id, inputState.value, inputState.isValid);
+    }
   }, [inputState, onInputChange, id]);
 
   const lostFocusHandler = () => {
-    dispatch({ type: INPUT_BLUR });
+    dispatch({ type: INPUT_TOUCHED });
   };
 
   return (
