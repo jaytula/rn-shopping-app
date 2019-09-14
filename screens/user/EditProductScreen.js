@@ -6,7 +6,8 @@ import {
   TextInput,
   StyleSheet,
   Platform,
-  Alert
+  Alert,
+  KeyboardAvoidingView
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
@@ -109,61 +110,67 @@ const EditProductScreen = props => {
   );
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <Input
-          id="title"
-          label="Title"
-          errorText="Please enter a valid title"
-          keyboardType="default"
-          autoCapitalize="sentences"
-          autoCorrect
-          returnKeyType="next"
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.title : ""}
-          initiallyValid={editedProduct && editedProduct.title}
-          required
-        />
-        <Input
-          id="imageUrl"
-          label="Image Url"
-          errorText="Please enter a valid Image Url"
-          keyboardType="default"
-          returnKeyType="next"
-          formState={formState}
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.imageUrl : ""}
-          initiallyValid={editedProduct && editedProduct.imageUrl}
-          required
-        />
-        {editedProduct ? null : (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={100}
+    >
+      <ScrollView>
+        <View style={styles.form}>
           <Input
-            id="price"
-            label="Price"
-            errorText="Please enter a valid price"
-            keyboardType="decimal-pad"
+            id="title"
+            label="Title"
+            errorText="Please enter a valid title"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
             returnKeyType="next"
-            onInputChange={inputChangeHandler.bind}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.title : ""}
+            initiallyValid={editedProduct && editedProduct.title}
             required
-            min={0}
           />
-        )}
-        <Input
-          id="description"
-          label="Description"
-          errorText="Please enter a valid description"
-          keyboardType="default"
-          autoCapitalize="sentences"
-          multiline
-          numberOfLines={3}
-          onInputChange={inputChangeHandler}
-          initialValue={editedProduct ? editedProduct.description : ""}
-          initiallyValid={editedProduct && editedProduct.description}
-          required
-          minLength={5}
-        />
-      </View>
-    </ScrollView>
+          <Input
+            id="imageUrl"
+            label="Image Url"
+            errorText="Please enter a valid Image Url"
+            keyboardType="default"
+            returnKeyType="next"
+            formState={formState}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.imageUrl : ""}
+            initiallyValid={editedProduct && editedProduct.imageUrl}
+            required
+          />
+          {editedProduct ? null : (
+            <Input
+              id="price"
+              label="Price"
+              errorText="Please enter a valid price"
+              keyboardType="decimal-pad"
+              returnKeyType="next"
+              onInputChange={inputChangeHandler}
+              required
+              min={0}
+            />
+          )}
+          <Input
+            id="description"
+            label="Description"
+            errorText="Please enter a valid description"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            multiline
+            numberOfLines={3}
+            onInputChange={inputChangeHandler}
+            initialValue={editedProduct ? editedProduct.description : ""}
+            initiallyValid={editedProduct && editedProduct.description}
+            required
+            minLength={5}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
