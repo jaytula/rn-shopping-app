@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
+import ReduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
 import * as Font from "expo-font";
-
-import { composeWithDevTools } from "redux-devtools-extension";
 
 import productsReducer from "./store/reducers/products";
 import cartReducer from "./store/reducers/cart";
@@ -26,7 +24,12 @@ const fetchFonts = () => {
   });
 };
 
-const store = createStore(rootReducer, composeWithDevTools());
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const middleware = [ReduxThunk];
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(...middleware))
+);
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
