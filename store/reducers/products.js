@@ -2,7 +2,8 @@ import PRODUCTS from "../../data/dummy-data";
 import {
   DELETE_PRODUCT,
   CREATE_PRODUCT,
-  UPDATE_PRODUCT
+  UPDATE_PRODUCT,
+  SET_PRODUCTS
 } from "../actions/products";
 import Product from "../../models/product";
 
@@ -61,6 +62,13 @@ export default (state = initialState, action) => {
         availableProducts: state.availableProducts.filter(
           product => product.id !== action.pid
         )
+      };
+    case SET_PRODUCTS:
+      console.log({ actionProducts: action.products });
+      return {
+        ...state,
+        availableProducts: action.products,
+        userProducts: action.products.filter(prod => prod.owner_id === "u1")
       };
   }
   return state;
