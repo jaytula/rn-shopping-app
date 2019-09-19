@@ -68,7 +68,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableProducts: action.products,
-        userProducts: action.products.filter(prod => prod.owner_id === "u1")
+        userProducts: action.products.filter(prod => prod.ownerId === "u1")
       };
   }
   return state;
