@@ -38,10 +38,21 @@ export const fetchProducts = () => {
   };
 };
 
-export const deleteProduct = id => ({
-  type: DELETE_PRODUCT,
-  pid: id
-});
+export const deleteProduct = id => {
+  return async dispatch => {
+    await fetch(`${FIREBASE_DB}/products/${id}.json`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+    dispatch({
+      type: DELETE_PRODUCT,
+      pid: id
+    })
+  }
+}
+  
 
 export const createProduct = (title, description, imageUrl, price) => {
   return async dispatch => {
@@ -69,13 +80,23 @@ export const createProduct = (title, description, imageUrl, price) => {
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
-      title,
-      description,
-      imageUrl
-    }
-  };
+  return async dispatch => {
+    await fetch(`${FIREBASE_DB}/products/${id}.json`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({title, description, imageUrl})
+    });
+    dispatch( {
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        title,
+        description,
+        imageUrl
+      }
+    });
+  }
+
 };
