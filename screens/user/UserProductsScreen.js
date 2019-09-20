@@ -21,8 +21,12 @@ const UserProductsScreen = props => {
       {
         text: "Yes",
         style: "destructive",
-        onPress: () => {
-          dispatch(deleteProduct(id));
+        onPress: async () => {
+          try {
+            await dispatch(deleteProduct(id));
+          } catch (err) {
+            Alert.alert('Something went wrong', err.message);
+          }
         }
       }
     ]);
