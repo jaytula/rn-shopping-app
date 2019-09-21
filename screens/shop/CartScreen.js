@@ -1,5 +1,12 @@
-import React from "react";
-import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+import React, {useState} from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  StyleSheet,
+  ActivityIndicator
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import Colors from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
@@ -9,6 +16,9 @@ import * as ordersActions from "../../store/actions/orders";
 import Card from "../../components/UI/Card";
 
 const CartScreen = props => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
   const cartTotalAmount = useSelector(state => state.cart.totalAmount);
   const cartItems = useSelector(state =>
     Object.entries(state.cart.items)
@@ -31,6 +41,24 @@ const CartScreen = props => {
     />
   );
 
+  const sendOrderHandler = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  };
+
+  if (isLoading)
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -38,14 +66,16 @@ const CartScreen = props => {
           Total:{" "}
           <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
         </Text>
-        <Button
-          color={Colors.accent}
-          onPress={() => {
-            dispatch(ordersActions.addOrder(cartItems, cartTotalAmount));
-          }}
-          disabled={!cartItems.length}
-          title="Order Now"
-        />
+        {isLoading ? (
+          <ActivityIndicator size="small" color={Colors.primary} />
+        ) : (
+          <Button
+            color={Colors.accent}
+            onPress={sendOrderHandler}
+            disabled={!cartItems.length}
+            title="Order Now"
+          />
+        )}
       </Card>
       <View>
         <FlatList
@@ -79,6 +109,11 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: Colors.primary
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 
