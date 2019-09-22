@@ -6,6 +6,7 @@ import {
   Button,
   View,
   Text,
+  RefreshControl,
   StyleSheet
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -20,12 +21,20 @@ import * as productsActions from "../../store/actions/products";
 import Colors from "../../constants/Colors";
 
 const ProductsOverviewScreen = props => {
+  const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const products = useSelector(state => state.products.availableProducts);
   const dispatch = useDispatch();
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    loadProducts().then(() => {
+      setRefreshing(false);
+    })
+  })
   const loadProducts = useCallback(async () => {
     setError(null);
     setIsLoading(true);
@@ -91,6 +100,7 @@ const ProductsOverviewScreen = props => {
     <FlatList
       keyExtractor={item => item.id}
       data={products}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       renderItem={itemData => (
         <ProductItem
           title={itemData.item.title}
