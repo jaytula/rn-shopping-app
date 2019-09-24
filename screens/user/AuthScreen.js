@@ -1,4 +1,4 @@
-import React, {useReducer, useCallback} from "react";
+import React, { useState, useReducer, useCallback } from "react";
 
 import {
   ScrollView,
@@ -10,7 +10,7 @@ import {
   StyleSheet
 } from "react-native";
 
-import {useDispatch} from 'react-redux';
+import { useDispatch } from "react-redux";
 
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -18,7 +18,7 @@ import Input from "../../components/UI/Input";
 import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 
-import * as authActions from '../../store/actions/auth';
+import * as authActions from "../../store/actions/auth";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 const formReducer = (state, action) => {
@@ -45,11 +45,12 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = props => {
+  const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: ""
     },
     inputValidities: {
       email: false,
@@ -58,10 +59,15 @@ const AuthScreen = props => {
     formIsValid: false
   });
 
-  const signupHandler = () => {
-    console.log('xyz');
-    dispatch(authActions.signup(formState.inputValues.email, formState.inputValues.password));
-  }
+  const authHandler = () => {
+    const actionCreator = isSignup ? authActions.signup : authActions.login;
+    dispatch(
+      actionCreator(
+        formState.inputValues.email,
+        formState.inputValues.password
+      )
+    );
+  };
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
@@ -74,9 +80,6 @@ const AuthScreen = props => {
     },
     [dispatchFormState]
   );
-
-
-
 
   return (
     <KeyboardAvoidingView
@@ -111,13 +114,17 @@ const AuthScreen = props => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button title="Login" color={Colors.primary} onPress={signupHandler} />
+              <Button
+                title={isSignup ? "Sign Up" : "Login"}
+                color={Colors.primary}
+                onPress={authHandler}
+              />
             </View>
             <View style={styles.buttonContainer}>
               <Button
-                title="Switch to Sign Up"
+                title={isSignup ? "Switch to Login" : "Switch to Sign Up"}
                 color={Colors.accent}
-                onPress={() => {}}
+                onPress={() => setIsSignup(prevState => !prevState)}
               />
             </View>
           </ScrollView>
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   buttonContainer: {
-      marginTop: 10
+    marginTop: 10
   }
 });
 
