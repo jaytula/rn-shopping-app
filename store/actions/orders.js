@@ -5,9 +5,10 @@ export const ADD_ORDER = "PLACE_ORDER";
 export const SET_ORDERS = "SET_ORDERS";
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const date = new Date();
-    const response = await fetch(`${FIREBASE_DB}/orders/u1.json`, {
+    const response = await fetch(`${FIREBASE_DB}/orders/u1.json?auth=${token}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

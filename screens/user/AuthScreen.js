@@ -82,10 +82,11 @@ const AuthScreen = props => {
           formState.inputValues.password
         )
       );
+      props.navigation.navigate({ routeName: "Shop" });
     } catch (err) {
       setError(err.message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(
