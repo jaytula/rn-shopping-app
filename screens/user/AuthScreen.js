@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback } from "react";
+import React, { useState, useEffect, useReducer, useCallback } from "react";
 
 import {
   ScrollView,
@@ -7,7 +7,9 @@ import {
   Text,
   TextInput,
   Button,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator,
+  Alert
 } from "react-native";
 
 import { useDispatch } from "react-redux";
@@ -45,6 +47,9 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = props => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -59,14 +64,26 @@ const AuthScreen = props => {
     formIsValid: false
   });
 
-  const authHandler = () => {
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay'}])
+    }
+  }, [ error] )
+
+  const authHandler = async () => {
     const actionCreator = isSignup ? authActions.signup : authActions.login;
-    dispatch(
+    setIsLoading(true);
+    
+    setError(null);
+    try {await dispatch(
       actionCreator(
         formState.inputValues.email,
         formState.inputValues.password
       )
-    );
+    )} catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(
@@ -114,11 +131,11 @@ const AuthScreen = props => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button
+              {isLoading ? <ActivityIndicator size="small" color={Colors.primary} /> : <Button
                 title={isSignup ? "Sign Up" : "Login"}
                 color={Colors.primary}
                 onPress={authHandler}
-              />
+              />}
             </View>
             <View style={styles.buttonContainer}>
               <Button
@@ -141,6 +158,11 @@ AuthScreen.navigationOptions = {
 const styles = StyleSheet.create({
   screen: {
     flex: 1
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   authContainer: {
     width: "80%",
