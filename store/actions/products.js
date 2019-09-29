@@ -7,8 +7,9 @@ export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const SET_PRODUCTS = "SET_PRODUCTS";
 
 export const fetchProducts = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
+      const userId = getState().auth.userId;
       const response = await fetch(`${FIREBASE_DB}/products.json`);
 
       if (!response.ok) {
@@ -30,7 +31,8 @@ export const fetchProducts = () => {
       }
       dispatch({
         type: "SET_PRODUCTS",
-        products: loadedProducts
+        products: loadedProducts,
+        userProducts: loadedProducts.filter(product => product.ownerId===userId)
       });
     } catch (err) {
       throw err;
@@ -63,12 +65,14 @@ export const deleteProduct = id => {
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
+    const userId = getState().auth.userId;
+
     const response = await fetch(`${FIREBASE_DB}/products.json?auth=${token}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ title, description, imageUrl, price })
+      body: JSON.stringify({ title, description, imageUrl, price, ownerId: userId })
     });
 
     const resData = await response.json();
@@ -80,7 +84,8 @@ export const createProduct = (title, description, imageUrl, price) => {
         title,
         description,
         imageUrl,
-        price
+        price,
+        ownerId: userId
       }
     });
   };

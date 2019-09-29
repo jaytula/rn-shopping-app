@@ -28,6 +28,10 @@ const OrdersScreen = props => {
 
   if(isLoading) return <View style={styles.centered}><ActivityIndicator size="large" color={Colors.primary} /></View>
 
+  if(orders.length === 0) {
+    return <View style={styles.centered}><Text>No orders found.</Text></View>
+  }
+
   return (
     <FlatList
       keyExtractor={item => item.id}
