@@ -1,10 +1,19 @@
-export const SIGNUP = "SIGNUP";
-export const LOGIN = "LOGIN";
+export const AUTHENTHICATE = "AUTHENTHICATE"; 
+
+import { AsyncStorage } from "react-native";
 
 import { FIREBASE_APIKEY } from "../../config";
 const AUTH_ENDPOINT = "https://identitytoolkit.googleapis.com/v1";
 
 console.log({ FIREBASE_APIKEY });
+
+export const authenticate = (userId, token) => {
+  return {
+    type: AUTHENTHICATE,
+    userId: userId,
+    token: token
+  }
+}
 
 export const signup = (email, password) => {
   return async dispatch => {
@@ -33,7 +42,7 @@ export const signup = (email, password) => {
       } else if (errorId === "OPERATION_NOT_ALLOWED") {
         message = "Operation not allowed!";
       } else if (errorId === "TOO_MANY_ATTEMPTS_TRY_LATER") {
-        message = "Too many attempts. Try again later."
+        message = "Too many attempts. Try again later.";
       }
       throw new Error(message);
     }
@@ -44,8 +53,10 @@ export const signup = (email, password) => {
 
     const token = resData.idToken;
     const userId = resData.localId;
+    dispatch(authenticate(userId, token));
+    const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn)*1000).toISOString();
 
-    dispatch({ type: SIGNUP, token, userId });
+    saveDataToStorage(token, userId, expirationDate);
   };
 };
 
@@ -83,8 +94,22 @@ export const login = (email, password) => {
 
     const token = resData.idToken;
     const userId = resData.localId;
+    const expirationDate = new Date(new Date().getTime() + parseInt(resData.expiresIn)*1000).toISOString();
 
-    console.log({token, userId})
-    dispatch({ type: LOGIN, token, userId });
+    console.log({ token, userId });
+    dispatch(authenticate(userId, token));
+
+    saveDataToStorage(token, userId, expirationDate);
   };
+};
+
+const saveDataToStorage = (token, userId, expirationDate) => {
+  AsyncStorage.setItem(
+    "userData",
+    JSON.stringify({
+      token,
+      userId,
+      expiryDate: expirationDate
+    })
+  );
 };
