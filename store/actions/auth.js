@@ -129,7 +129,7 @@ const setLogoutTimer = expirationTime => {
   return dispatch => {
     time = setTimeout(() => {
       dispatch(logout());
-    }, expirationTime / 1000);
+    }, expirationTime);
   };
 };
 const saveDataToStorage = (token, userId, expirationDate) => {
